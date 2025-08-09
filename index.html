@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Downloader</title>
+    <title>CraxkerDownloader</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -74,9 +74,9 @@
             let artist = data.uploader;
 
             if (format === 'mp4') {
-                for (let format of data.format) {
-                    if (format.quality === resolution) {
-                        downloadUrl = format.url;
+                for (let fmt of data.format) {
+                    if (fmt.quality === resolution) {
+                        downloadUrl = fmt.url;
                         break;
                     }
                 }
