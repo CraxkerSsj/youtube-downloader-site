@@ -81,7 +81,10 @@
                     }
                 }
             } else if (format === 'mp3') {
-                downloadUrl = data.format.find(f => f.ext === 'm4a').url;
+                const audioFormat = data.format.find(f => f.ext === 'm4a');
+                if (audioFormat) {
+                    downloadUrl = audioFormat.url;
+                }
             }
 
             if (downloadUrl) {
