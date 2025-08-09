@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CraxkerDownloader</title>
+    <title>YouTube Downloader</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,17 +66,37 @@
                 return;
             }
 
-            const apiUrl = `https://en.savefrom.net/102/convert/?url=https://www.youtube.com/watch?v=${videoId}&format=${format}&quality=${resolution}`;
+            const apiUrl = `https://youtube-dl-api.herokuapp.com/dl?url=https://www.youtube.com/watch?v=${videoId}`;
 
             try {
-                const response = await fetch(apiUrl);
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
                 const data = await response.json();
 
-                if (data.direct) {
-                    const downloadUrl = data.direct;
-                    const title = data.title;
-                    const artist = data.uploader;
+                let downloadUrl = null;
+                let title = data.title;
+                let artist = data.uploader;
 
+                if (format === 'mp4') {
+                    for (let fmt of data.format) {
+                        if (fmt.quality === resolution) {
+                            downloadUrl = fmt.url;
+                            break;
+                        }
+                    }
+                } else if (format === 'mp3') {
+                    const audioFormat = data.format.find(f => f.ext === 'm4a');
+                    if (audioFormat) {
+                        downloadUrl = audioFormat.url;
+                    }
+                }
+
+                if (downloadUrl) {
                     const link = document.createElement('a');
                     link.href = downloadUrl;
                     link.download = `${title}.${format}`;
